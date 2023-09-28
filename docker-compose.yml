@@ -10,7 +10,9 @@ services:
       POSTGRES_PASSWORD: Quantum9963
       POSTGRES_DB: user_db
     volumes:
-      - postgres-user-data:/var/lib/postgresql/data
+      - shared-postgres-data:/var/lib/postgresql/data
+    networks:
+      - my_network
 
   postgres_product:
     image: postgres:latest
@@ -21,7 +23,9 @@ services:
       POSTGRES_PASSWORD: Quantum9963
       POSTGRES_DB: product_db
     volumes:
-      - postgres-product-data:/var/lib/postgresql/data
+      - shared-postgres-data:/var/lib/postgresql/data
+    networks:
+      - my_network
 
   user-service:
     build: ./userservice
@@ -34,6 +38,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: Quantum9963
     ports:
       - "8080:8080"
+    networks:
+      - my_network
 
   product-service:
     build: ./productservice
@@ -46,7 +52,12 @@ services:
       SPRING_DATASOURCE_PASSWORD: Quantum9963
     ports:
       - "8081:8081"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
 
 volumes:
-  postgres-user-data:
-  postgres-product-data:
+  shared-postgres-data:
